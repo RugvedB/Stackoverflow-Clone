@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
-from .models import *
-from userauth.models import *
+from .models import Tags, Questions, Answer
+from userauth.models import StackoverflowUser
 from django.db import transaction
 from django.db.models import Count,Q
 # Create your views here.
@@ -98,6 +98,8 @@ def askquestion(request):
             a = Answer(ans_content=selfanswer, answered_by=user, question_to_ans = q)
             print(a)
             a.save()
+            q.answers.add(a)
+            q.save()
 
     return render(request, 'main/askquestion.html')
 
@@ -115,12 +117,6 @@ def questionByTag(request,tag_word):
         marked = 'latest'
         all_questions = main_query.all().order_by('-created_at')
     return render(request, 'main/questions.html',{'all_questions':all_questions,'marked' : marked})
-
-# def upvote(request,type,question_id):
-#     pass
-
-# def downvote(request,type,question_id):
-#     pass
 
 def profile(request):
     return render(request, 'main/profile.html')
