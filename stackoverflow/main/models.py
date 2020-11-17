@@ -1,0 +1,32 @@
+from django.db import models
+from datetime import datetime
+from django.utils import timezone
+from django.conf import settings
+# from userauth.models import User
+medium_len = 100
+long_len = 255
+
+
+class Tags(models.Model):
+    tag_word = models.CharField(max_length=medium_len, unique = True)  
+
+class Questions(models.Model):
+    title = models.CharField(max_length=long_len)
+    ques_content = models.TextField()
+    tags = models.ManyToManyField(Tags)
+    upvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_upvote')
+    downvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_downvote')
+    answer_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_answers')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False)
+    views = models.IntegerField(default=0)
+    is_answered = models.BooleanField(default=False)
+
+
+class Answer(models.Model):
+    ans_content = models.TextField()
+    answered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=False)
+    question_toans = models.ForeignKey(Questions, on_delete=models.CASCADE, blank=False)
+    upvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_a_upvote')
+    downvotes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='user_a_downvote')
+    views = models.IntegerField(default=0)
+    is_accepted = models.BooleanField(default=False)

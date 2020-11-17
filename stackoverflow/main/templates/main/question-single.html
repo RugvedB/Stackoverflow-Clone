@@ -78,53 +78,53 @@
                 <div style="flex:0.9;word-break: break-all;" class="p-2">
                     Context: I coded a Kafka Consumer which receives a simple message and I want to insert it to MongoDb using com.mongodb.reactivestreams.client.MongoClient. Althought I understand my issue is all about how use properly MongoClient let me inform my stack: my stack is Micronaut + MongoDb reactive + Kotlin.
 
-Disclaimer: if someone provide answer in java I may be able to translate it to Kotlin. You can ignore the Kafka part bellow since it is working as expected.
+                Disclaimer: if someone provide answer in java I may be able to translate it to Kotlin. You can ignore the Kafka part bellow since it is working as expected.
 
-Here is my code
+                Here is my code
 
-package com.mybank.consumer
+                package com.mybank.consumer
 
-import com.mongodb.reactivestreams.client.MongoClient
-import com.mongodb.reactivestreams.client.MongoCollection
-import com.mongodb.reactivestreams.client.MongoDatabase
-import io.micronaut.configuration.kafka.annotation.KafkaKey
-import io.micronaut.configuration.kafka.annotation.KafkaListener
-import io.micronaut.configuration.kafka.annotation.OffsetReset
-import io.micronaut.configuration.kafka.annotation.Topic
-import org.bson.Document
-import org.reactivestreams.Publisher
-import javax.inject.Inject
-
-
-@KafkaListener(offsetReset = OffsetReset.EARLIEST)
-class DebitConsumer {
-
-    @Inject
-    //@Named("another")
-    var mongoClient: MongoClient? = null
+                import com.mongodb.reactivestreams.client.MongoClient
+                import com.mongodb.reactivestreams.client.MongoCollection
+                import com.mongodb.reactivestreams.client.MongoDatabase
+                import io.micronaut.configuration.kafka.annotation.KafkaKey
+                import io.micronaut.configuration.kafka.annotation.KafkaListener
+                import io.micronaut.configuration.kafka.annotation.OffsetReset
+                import io.micronaut.configuration.kafka.annotation.Topic
+                import org.bson.Document
+                import org.reactivestreams.Publisher
+                import javax.inject.Inject
 
 
-    @Topic("debit")
-    fun receive(@KafkaKey key: String, name: String) {
+                @KafkaListener(offsetReset = OffsetReset.EARLIEST)
+                class DebitConsumer {
+
+                    @Inject
+                    //@Named("another")
+                    var mongoClient: MongoClient? = null
 
 
-        println("Account - $name by $key")
-
-        
-        var mongoDb : MongoDatabase? = mongoClient?.getDatabase("account")
-        var mongoCollection: MongoCollection<Document>? = mongoDb?.getCollection("account_collection")
-        var mongoDocument: Publisher<Document>? = mongoCollection?.find()?.first()
-        print(mongoDocument.toString())
-
-        //println(mongoClient?.getDatabase("account")?.getCollection("account_collection")?.find()?.first())
-        //val mongoClientClient: MongoDatabase  = mongoClient.getDatabase("account")
-        //println(mongoClient.getDatabase("account").getCollection("account_collection").find({ "size.h": { $lt: 15 } })
-        //println(mongoClient.getDatabase("account").getCollection("account_collection").find("1").toString())
+                    @Topic("debit")
+                    fun receive(@KafkaKey key: String, name: String) {
 
 
-    }
-}
-Well, the code above was the closest I got. It is not prompting any error. It is printing
+                        println("Account - $name by $key")
+
+                        
+                        var mongoDb : MongoDatabase? = mongoClient?.getDatabase("account")
+                        var mongoCollection: MongoCollection<Document>? = mongoDb?.getCollection("account_collection")
+                        var mongoDocument: Publisher<Document>? = mongoCollection?.find()?.first()
+                        print(mongoDocument.toString())
+
+                        //println(mongoClient?.getDatabase("account")?.getCollection("account_collection")?.find()?.first())
+                        //val mongoClientClient: MongoDatabase  = mongoClient.getDatabase("account")
+                        //println(mongoClient.getDatabase("account").getCollection("account_collection").find({ "size.h": { $lt: 15 } })
+                        //println(mongoClient.getDatabase("account").getCollection("account_collection").find("1").toString())
+
+
+                    }
+                }
+                Well, the code above was the closest I got. It is not prompting any error. It is printing
 
                 <!-- Tags -->
                 <div>

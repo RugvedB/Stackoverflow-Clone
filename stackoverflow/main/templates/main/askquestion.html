@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+    <title>Document</title>
+
+    <link rel="stylesheet" href="./main.css">
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+
+</head>
+
+<body>
+
+  
+      <script type="text/javascript">
+          function showanswerbox(selfans){
+            console.log(selfans.checked)
+            var showanswerboxnow = document.getElementById("wans");
+            showanswerboxnow.style.display = selfans.checked ? "block" : "none";
+          }
+      </script>
+
+        <!-- navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="#">Navbar</a>
+          
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+              <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+              </ul>
+              <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+            </div>
+          </nav>
+    
+          <div class = "container">
+              <div class= "row">
+
+              <div class="p-2">
+                <h2><strong> Ask a public question</strong></h2>
+              </div>
+
+                <div class="col-12 col-md-1"></div>
+                <div class="col-12 col-md-8">
+
+                <form method="POST">
+                  {% csrf_token %}
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Title</h5>
+                      <p class="card-text">Be specific and imagine you’re asking a question to another person.</p>
+                      <textarea name='title' style="width:100%"></textarea>
+                      <hr class="invis">
+                      <h5 class="card-title">Body</h5>
+                      <p class="card-text">Include all the information someone would need to answer your question.</p>
+                      <textarea name="queseditor"></textarea>
+                      <script>
+                              CKEDITOR.replace( 'queseditor' );
+                      </script>
+                      <hr class="invis">
+                      <h5 class="card-title">Tags</h5>
+                      <p class="card-text">Be specific and imagine you’re asking a question to another person.</p>
+                      <textarea name='tags' style="width:100%"></textarea>
+
+                      <hr class="invis">
+
+                      <input type="checkbox" id="selfanswer" name="selfanswer" onclick="showanswerbox(this)" value="">
+                      <label for="selfanswer"> <strong> Answer your own question </strong> – share your knowledge, Q&A-style</label><br>
+
+                      <div id="wans" style="display: none">
+                        <h5 class="card-title">Your Answer</h5>
+                        <textarea name="selfanswereditor"></textarea>
+                        <script>
+                                CKEDITOR.replace( 'selfanswereditor' );
+                        </script>
+                        <hr class="invis">
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <button style="width:100%"; class="btn btn-primary mt-2 mb-2" type="submit"> Review your Question</button>
+                </form>
+
+
+                </div>
+            
+                <div class="col-12 col-md-3">
+                 
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Step 1: Draft Your Question</h5>
+                      <p>The community is here to help you with specific coding, algorithm, or language problems.
+                        Avoid asking opinion-based questions.</p>
+                      <hr class="invis">
+
+
+                      <div class="accordion" id="accordionExample">
+                        <div class="card">
+                          <div class="card-header" id="headingOne">
+                            <h2 class="mb-0">
+                              <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Collapsible #1
+                              </button>
+                            </h2>
+                          </div>
+                      
+                          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body">
+                              Anim pariatur cliche reprehenderit,                             </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-header" id="headingTwo">
+                            <h2 class="mb-0">
+                              <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Collapsible #2
+                              </button>
+                            </h2>
+                          </div>
+                          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                            <div class="card-body">
+                              Anim pariatur cliche reprehenderit,                             </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-header" id="headingThree">
+                            <h2 class="mb-0">
+                              <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Collapsible #3
+                              </button>
+                            </h2>
+                          </div>
+                          <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                            <div class="card-body">
+                              Anim pariatur cliche reprehenderit,                             </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+                
+
+              </div>
+
+          </div>
+
+</body>
+
+
+
