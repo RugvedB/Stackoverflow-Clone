@@ -2,13 +2,26 @@ from django.shortcuts import render
 from .models import *
 from userauth.models import *
 from django.db import transaction
+from django.db.models import Count
 # Create your views here.
+
+
 def questions(request):
     all_questions = Questions.objects.all()
-    return render(request, 'main/questions.html')
+    return render(request, 'main/questions.html',{'all_questions':all_questions})
 
 def questionsingle(request, pk):
-    return render(request, 'main/question-single.html')
+    user = StackoverflowUser.objects.get(pk=1)
+    q = Questions.objects.get(pk = pk)
+    if request.method == 'POST':
+        questiontaken = request.POST.dict()
+        answer = questiontaken.get('editor1') # Answer content
+        a = Answer(ans_content=answer, answered_by=user, question_to_ans = q)
+        a.save()
+        q.answers.add(a)
+        q.save()
+    
+    return render(request, 'main/question-single.html',{'q':q })
 
 def askquestion(request):
     user = StackoverflowUser.objects.get(pk=1)
@@ -37,7 +50,7 @@ def askquestion(request):
             q.save()
 
         if selfanswer != '':     
-            a = Answer(ans_content=selfanswer, answered_by=user, question_toans = q)
+            a = Answer(ans_content=selfanswer, answered_by=user, question_to_ans = q)
             print(a)
             a.save()
 

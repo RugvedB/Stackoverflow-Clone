@@ -54,7 +54,9 @@
                 <!-- IMP -->
                 <div style="display: flex;justify-content: space-between;" class="p-2">
                     <h2><b>Questions</b></h2>
-                    <button class="btn btn-primary btn-sm" type="submit">Ask Question</button>
+                    <button onclick="location.href='{% url 'name_askquestion' %}'" class="btn btn-primary btn-sm" type="submit">
+                        Ask Question
+                    </button>
                 </div>
 
                 <!-- Filter -->
@@ -73,36 +75,36 @@
                     </nav>
                 </div>
                 
-
+                {% for q in all_questions %}
                 <div class="row mt-2">
+                  
                     <div class="col-12 col-md-4">
                        
                         <div style="height:120px;display: flex;flex-direction: row;justify-content: center;align-items: center;" class="text-center">
-                            <div style="flex: 0.33;">6<br>views</div>
-                            <div style="flex: 0.33;">6<br>views</div>
-                            <div style="flex: 0.34;">6<br>views</div>
+                            <div style="flex: 0.33;">{{q.upvotes.all.count}}<br>Upvotes</div>
+                            <div style="flex: 0.33;">{{q.answers.all.count}}<br>Answers</div>
+                            <div style="flex: 0.34;">{{q.views}}<br>Views</div>
                         </div>
                     </div>
                     <div class="col-12 col-md-8">
                         <div style="max-height: 70px;overflow: hidden;" class="mb-2">
-                        Text is not changing on screen when using ipcRenderer.on() inside mounted() OR created() VueJs+Electron Text is not changing on screen when using ipcRenderer.on() inside mounted() OR created() VueJs+ElectronText is not changing on screen when using ipcRenderer.on() inside mounted() OR created() VueJs+Electron
+                          <a href="{% url 'name_questionsingle' q.pk %}">{{q.title}}</a>
                         </div>
                         <div style="max-height: 40px;overflow: hidden;" class="mb-2">
-                            <button class="btn btn-primary btn-sm" type="submit">Button</button>
-                            <button class="btn btn-primary btn-sm" type="submit">Button</button>
-                            <button class="btn btn-primary btn-sm" type="submit">Button</button>
-                            <button class="btn btn-primary btn-sm" type="submit">Button</button>
-                            <button class="btn btn-primary btn-sm" type="submit">Button</button>
-                            <button class="btn btn-primary btn-sm" type="submit">Button</button>
+                          {% for t in q.tags.all %}
+                            <button class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
+                          {% endfor %}
                         </div>
                     </div>
+                  
                 </div>
                 
                 <div style="display: flex;justify-content:flex-end; ">
-                    <small>Asked on <b> xx/xx/xxxx</b> </small>
+                    <small>Asked on <b> {{q.created_at}}</b> </small>
                 </div>
                 
                 <hr>
+                {% endfor %}
                 
                 
             
