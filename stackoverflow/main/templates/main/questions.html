@@ -63,14 +63,10 @@
                 <div style="display: flex;flex-direction: row;justify-content: end;">
                     <nav aria-label="">
                         <ul class="pagination pagination-md">
-                          <li class="page-item active" aria-current="page">
-                            <span class="page-link">
-                              Latest
-                              <span class="sr-only">(current)</span>
-                            </span>
-                          </li>
-                          <li class="page-item"><a class="page-link" href="#">Most viewed</a></li>
-                          <li class="page-item"><a class="page-link" href="#">Unanswered</a></li>
+                          
+                          <li class="page-item {% if marked == 'latest' %} active{% endif %}"><a class="page-link" href="?q=latest">Latest</a></li>
+                          <li class="page-item {% if marked == 'mostviewed' %} active{% endif %}"><a class="page-link" href="?q=mostviewed">Most viewed</a></li>
+                          <li class="page-item {% if marked == 'unanswered' %} active{% endif %}"><a class="page-link" href="?q=unanswered">Unanswered</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -92,7 +88,7 @@
                         </div>
                         <div style="max-height: 40px;overflow: hidden;" class="mb-2">
                           {% for t in q.tags.all %}
-                            <button class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
+                            <button onclick="location.href='{% url 'name_questionByTag' t.tag_word %}'" class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
                           {% endfor %}
                         </div>
                     </div>
@@ -117,3 +113,4 @@
 
 </body>
 </html>
+

@@ -70,9 +70,9 @@
                 <!-- left (upvote) -->
                 <div style="flex:0.1;display: flex; justify-content: center;" class="pt-2">
                     <div>
-                        <div class="triangle-up">UP</div>
-                        <div class="pt-1 pb-1">{{ q.votes }}</div>
-                        <div class="triangle-down">DOWN</div>
+                        <a href="?isQuestion=True&id={{q.pk}}&action_type=upvote"><div class="triangle-up">UP</div></a>
+                            <div class="pt-1 pb-1">{{q.votes}}</div>
+                            <a href="?isQuestion=True&id={{q.pk}}&action_type=downvote"><div class="triangle-down">DOWN</div></a>
                     </div>
                 </div>
                 <!-- right (question) -->
@@ -81,7 +81,7 @@
                 <!-- Tags -->
                 <div>
                     {% for t in q.tags.all %}
-                        <button class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
+                        <button onclick="location.href='{% url 'name_questionByTag' t.tag_word %}'" class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
                     {% endfor %}
                 </div>
 
@@ -134,14 +134,14 @@
                     <!-- left (upvote) -->
                     <div style="flex:0.1;display: flex; justify-content: center;" class=" pt-2">
                         <div>
-                            <div class="triangle-up">UP</div>
+                            <a href="?isQuestion=False&id={{a.pk}}&action_type=upvote"><div class="triangle-up">UP</div></a>
                             <div class="pt-1 pb-1">{{a.votes}}</div>
-                            <div class="triangle-down">DOWN</div>
+                            <a href="?isQuestion=False&id={{a.pk}}&action_type=downvote"><div class="triangle-down">DOWN</div></a>
                         </div>
                     </div>
                     <!-- right (question) -->
                     <div style="flex:0.9" class="p-2">
-                        {{a.ans_content  | striptags | safe | escape}}
+                        {{a.ans_content|safe|escape}}
                     </div>
                 </div>
                 <div style="display: flex;justify-content:flex-end; ">
