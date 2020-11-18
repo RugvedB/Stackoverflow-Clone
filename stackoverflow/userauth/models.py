@@ -15,12 +15,8 @@ class StackoverflowUser(AbstractUser):
     about_me = models.TextField(default='Apparently, this user prefers to keep an air of mystery about them.')
     ques_asked = models.ManyToManyField('main.Questions', blank = True)
     ans_given = models.ManyToManyField('main.Answer', blank = True)
-    profile_pic = models.ImageField(upload_to='user_profile_pic', blank=True, null = True)
+    profile_pic = models.ImageField(upload_to='user_profile_pic', default='default_image.png',blank=True, null = True)
     date_joined = models.DateTimeField(default = timezone.now)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = [''] # Email & Password are required by default.
-
-
-
-# // related name

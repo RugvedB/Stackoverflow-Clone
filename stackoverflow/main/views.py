@@ -4,6 +4,9 @@ from userauth.models import StackoverflowUser
 from django.db import transaction
 from django.db.models import Count,Q
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+from django.core.paginator import Paginator
 # Create your views here.
 
 def reputation(booleanval, rate, ques_obj):
@@ -22,13 +25,13 @@ def performUpDownVote(user,isQuestion,id,action_type):
         print('------> isQ')
         q = Questions.objects.get(pk = id)
         if q.author == user:
-            return
+            return False
     else:
         print('------> isNotQ')
         flag=True
         q = Answer.objects.get(pk = id)
         if q.answered_by == user:
-            return
+            return False
 
     existsInUpvote = True if user in q.upvotes.all() else False
     existsDownUpvote = True if user in q.downvotes.all() else False
@@ -54,28 +57,49 @@ def performUpDownVote(user,isQuestion,id,action_type):
             reputation(flag,10, q)
             q.votes = q.votes + 1
     q.save()
+    return True
   
 def questions(request):
     main_query = Questions.objects
-    if request.GET and request.GET['q'] == 'mostviewed':
+    if request.GET and ('q' in request.GET) and request.GET['q'] == 'mostviewed':
         all_questions = main_query.all().order_by('-views')
         marked = 'mostviewed'
-    elif request.GET and  request.GET['q'] == 'unanswered':
+    elif request.GET and ('q' in request.GET) and request.GET['q'] == 'unanswered':
         all_questions = main_query.filter(is_answered = False)
         marked = 'unanswered'
     else:
         marked = 'latest'
         all_questions = main_query.all().order_by('-created_at')
+    
+    # Pagination
+    page = request.GET.get('page', 1)
+    paginator = Paginator(all_questions, 5)
+    try:
+        all_questions = paginator.page(page)
+    except PageNotAnInteger:
+        all_questions = paginator.page(1)
+    except EmptyPage:
+        all_questions = paginator.page(paginator.num_pages)
+    
     return render(request, 'main/questions.html',{'all_questions':all_questions,'marked' : marked})
 
 @login_required
 def questionsingle(request, pk):
     # user = StackoverflowUser.objects.get(pk=1)
     user = request.user
-    if request.GET and request.GET['isQuestion'] and request.GET['id'] and request.GET['action_type']:
-        performUpDownVote(user,request.GET['isQuestion'],request.GET['id'],request.GET['action_type'])
-        return redirect('/question/'+str(pk))
-
+    try:
+        if request.GET and request.GET['isQuestion'] and request.GET['id'] and request.GET['action_type']:
+            result = performUpDownVote(user,request.GET['isQuestion'],request.GET['id'],request.GET['action_type'])
+            redirect_to = '/question/'+str(pk)
+            if 'page' in request.GET:
+                redirect_to += '?page='+request.GET['page']
+            if result == True:
+                messages.success(request, 'Action successful')
+            else:
+                messages.error(request, 'Invalid Action')
+            return redirect(redirect_to)
+    except Exception:
+        pass
     
     q = Questions.objects.get(pk = pk)
     if request.method == 'POST':
@@ -84,9 +108,21 @@ def questionsingle(request, pk):
         a = Answer(ans_content=answer, answered_by=user, question_to_ans = q)
         a.save()
         q.answers.add(a)
+        messages.success(request, 'Answer posted successfully')
     q.views = q.views + 1
     q.save()
-    return render(request, 'main/question-single.html',{'q':q })
+
+    # Pagination
+    all_answers = q.answers.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(all_answers, 5)
+    try:
+        all_answers = paginator.page(page)
+    except PageNotAnInteger:
+        all_answers = paginator.page(1)
+    except EmptyPage:
+        all_answers = paginator.page(paginator.num_pages)
+    return render(request, 'main/question-single.html',{'q':q,'all_answers':all_answers })
 
 @login_required
 def askquestion(request):
@@ -124,6 +160,10 @@ def askquestion(request):
             user.ans_given.add(a)
         user.ques_asked.add(q)
         user.save()
+
+        messages.success(request, 'Question posted successfully')
+        
+        return redirect('name_questionsingle',pk=q.pk)
     return render(request, 'main/askquestion.html')
 
 
@@ -139,10 +179,14 @@ def questionByTag(request,tag_word):
     else:
         marked = 'latest'
         all_questions = main_query.all().order_by('-created_at')
+
+    
     return render(request, 'main/questions.html',{'all_questions':all_questions,'marked' : marked})
 
 @login_required
 def profile(request, username):
     seeuser = StackoverflowUser.objects.get(username=username)
     showeditbutton = True if seeuser == request.user else False
+
+    
     return render(request, 'main/profile.html',{'seeuser':seeuser, 'showeditbutton': showeditbutton})

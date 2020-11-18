@@ -8,11 +8,17 @@ from django.contrib.auth.decorators import login_required
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        print(request.POST)
         if form.is_valid():
             form.save()
             print('####################### # SAVED # ###########################')
             username = form.cleaned_data.get('username')
             messages.success(request, f'Your account has been created! You are now able to log in')
+        else:
+            print('form is not valid')
+            print(form.errors)
+            messages.error(request, 'Error occured')
+            return render(request, 'userauth/signup.html', {'form': form})
         return redirect('name_login_req')
     else:
         form = SignUpForm()
@@ -39,4 +45,5 @@ def editprofile(request):
         if request.FILES and request.FILES['fileInput']:
             user.profile_pic = request.FILES['fileInput']
         user.save()
+        messages.success(request, 'Profile updated successfully')
     return render(request, 'userauth/editprofile.html', {'user':user})

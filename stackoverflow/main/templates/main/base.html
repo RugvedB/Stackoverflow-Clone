@@ -51,6 +51,21 @@
           </div>
         </div>
       </nav>
+
+      
+      <div class="container">
+
+        {% if messages %}
+        <ul class="border border-primary">
+            {% for message in messages %}
+            <li class="text-primary">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+     
+
+
       {% block content %}
 
       {% endblock %}

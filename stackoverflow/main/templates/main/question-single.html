@@ -22,14 +22,14 @@
                 <!-- left (upvote) -->
                 <div style="flex:0.1;display: flex; justify-content: center;" class="pt-2">
                     <div>
-                        <a href="?isQuestion=True&id={{q.pk}}&action_type=upvote"><div class="triangle-up"></div></a>
+                        <a href="?isQuestion=True&id={{q.pk}}&action_type=upvote&page={{all_answers.number}}"><div class="triangle-up"></div></a>
                             <div style="width: 100%;text-align: center;" class="pt-1 pb-1">{{q.votes}}</div>
-                            <a href="?isQuestion=True&id={{q.pk}}&action_type=downvote"><div class="triangle-down"></div></a>
+                            <a href="?isQuestion=True&id={{q.pk}}&action_type=downvote&page={{all_answers.number}}"><div class="triangle-down"></div></a>
                     </div>
                 </div>
                 <!-- right (question) -->
                 <div style="flex:0.9;word-break: break-all;" class="p-2">
-                    {{q.ques_content  | striptags | safe | escape}}
+                    {{q.ques_content | safe | escape}}
                 <!-- Tags -->
                 <div>
                     {% for t in q.tags.all %}
@@ -66,29 +66,44 @@
             
             
 
-            <!-- Pagination -->
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-            </nav>
+<!-- Pagination -->
+<nav aria-label="Page navigation example">
+    {% if all_answers.has_other_pages %}
+      <ul class="pagination">
+        {% if all_answers.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ all_answers.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+          <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+        {% endif %}
+        {% for i in all_answers.paginator.page_range %}
+          {% if all_answers.number == i %}
+            <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if all_answers.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ all_answers.next_page_number }}">&raquo;</a></li>
+        {% else %}
+          <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+    </nav>
+    
 
             <!-- Answer list -->
             <div style="max-width: 100%;word-break: break-all;">
             <h3>Answers</h3>
-            {% for a in q.answers.all %}
+            {% for a in all_answers %}
             <div>
                 <div style="display: flex;flex-direction: row;">
                     <!-- left (upvote) -->
                     <div style="flex:0.1;display: flex; justify-content: center;" class=" pt-2">
                         <div>
-                            <a href="?isQuestion=False&id={{a.pk}}&action_type=upvote"><div class="triangle-up"></div></a>
+                            <a href="?isQuestion=False&id={{a.pk}}&action_type=upvote&page={{all_answers.number}}"><div class="triangle-up"></div></a>
                             <div style="width: 100%;text-align: center;" class="pt-1 pb-1">{{a.votes}}</div>
-                            <a href="?isQuestion=False&id={{a.pk}}&action_type=downvote"><div class="triangle-down"></div></a>
+                            <a href="?isQuestion=False&id={{a.pk}}&action_type=downvote&page={{all_answers.number}}"><div class="triangle-down"></div></a>
                         </div>
                     </div>
                     <!-- right (question) -->
