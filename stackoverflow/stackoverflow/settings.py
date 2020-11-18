@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
+
 """
 
 from pathlib import Path
@@ -38,8 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'userauth.apps.UserauthConfig',
-    'main.apps.MainConfig'
+    'main.apps.MainConfig',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = 'name_questions'
+LOGIN_URL = 'name_login_req'
 
 AUTH_USER_MODEL = 'userauth.StackoverflowUser'
 
@@ -123,3 +130,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')

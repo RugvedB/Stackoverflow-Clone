@@ -13,13 +13,13 @@ class StackoverflowUser(AbstractUser):
     name = models.CharField(max_length=long_len)
     reputation_score = models.IntegerField(default=0)
     about_me = models.TextField(default='Apparently, this user prefers to keep an air of mystery about them.')
-    ques_asked = models.ManyToManyField('main.Questions')
-    ans_given = models.ManyToManyField('main.Answer')
-    profile_pic = models.ImageField(upload_to='user_profile_pic')
+    ques_asked = models.ManyToManyField('main.Questions', blank = True)
+    ans_given = models.ManyToManyField('main.Answer', blank = True)
+    profile_pic = models.ImageField(upload_to='user_profile_pic', blank=True, null = True)
     date_joined = models.DateTimeField(default = timezone.now)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username'] # Email & Password are required by default.
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = [''] # Email & Password are required by default.
 
 
 

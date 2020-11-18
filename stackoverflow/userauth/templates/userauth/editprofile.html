@@ -1,0 +1,122 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container">
+<div class="row flex-lg-nowrap">
+  <script>
+    function chooseFile() {
+        $("#fileInput").click();
+    }
+  </script>
+  <form method = "POST" enctype="multipart/form-data" > 
+    {% csrf_token %}
+  <div class="col">
+    <div class="row">
+      <div class="col mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="e-profile">
+              <div class="row">
+                <div class="col-12 col-sm-auto mb-3">
+                  <div class="mx-auto" style="width: 140px;">
+                    <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
+                      <img style="width: 100%;height: auto;" src = "{{user.profile_pic.url}}">
+                    </div>
+                  </div>
+                </div>
+                <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                  <div class="text-center text-sm-left mb-2 mb-sm-0">
+                    <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{user.name}}</h4>
+                    <p class="mb-0">@{{user.username}}</p>
+                    <div class="text-muted"><small>Last seen {{user.last_login}}</small></div>
+                    <div class="mt-2">
+
+                      <div>
+                        <i class="fa fa-fw fa-camera"></i>
+                        <input type="file" id="fileInput" name="fileInput" />
+                      </div>
+                      <!-- <button onclick="chooseFile();" class="btn btn-primary" >
+                        
+                        <span>Change Photo</span>
+                      </button> -->
+                      
+                    </div>
+                  </div>
+                  <div class="text-center text-sm-right">
+                    <div class="text-muted"><small>Joined on {{user.date_joined}}</small></div>
+                  </div>
+                </div>
+              </div>
+              <ul class="nav nav-tabs">
+                <li class="nav-item"><a href="" class="active nav-link">Settings</a></li>
+              </ul>
+              <div class="tab-content pt-3">
+                <div class="tab-pane active">
+                  <form class="form" novalidate="">
+                    <div class="row">
+                      <div class="col">
+                        <div class="row">
+                          <div class="col">
+                            <div class="form-group">
+                              <label>First Name</label>
+                              <input name='firstname' class="form-control" type="text" name="name" placeholder="John Smith" value="{{user.first_name}}">
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group">
+                              <label>Last Name</label>
+                              <input name='lastname' class="form-control" type="text" name="username" placeholder="johnny.s" value="{{user.last_name}}">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col mb-3">
+                            <div class="form-group">
+                              <label>About</label>
+                              <textarea name='about' class="form-control" rows="5" placeholder="{{user.about_me}}" value="{{user.about_me}}"></textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col d-flex justify-content-end">
+                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                      </div>
+                    </div>
+                  </form>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-3 mb-3">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="px-xl-3">
+              <button onclick="location.href='{% url 'name_logout_req' %}'" class="btn btn-block btn-secondary">
+                <i class="fa fa-sign-out"></i>
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h6 class="card-title font-weight-bold">Support</h6>
+            <p class="card-text">Get fast, free help from our friendly assistants.</p>
+            <button type="button" class="btn btn-primary" onclick="location.href='https://github.com/RugvedB/Stackoverflow-Clone'"> Contact Us</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>
+</div>
+</div>
+
+{% endblock %}
