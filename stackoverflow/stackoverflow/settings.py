@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'userauth.apps.UserauthConfig',
     'main.apps.MainConfig',
     'crispy_forms',
+    'dark'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

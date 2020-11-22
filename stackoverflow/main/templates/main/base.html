@@ -18,7 +18,41 @@
     <link rel="stylesheet" href="{% static 'css/editprofile.css' %}">
     <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
 
+    
+
 </head>
+<script>
+  function comeToTheDarkside() {
+    var isChecked = document.getElementById('customSwitch1').checked
+    if(isChecked){
+      document.documentElement.style.filter = 'invert(1) hue-rotate(180deg)';
+      document.body.querySelectorAll('img, picture, video')
+      .forEach(el => el.style.filter = 'invert(1) hue-rotate(180deg)');
+      localStorage.setItem('mode','dark')
+    }
+    else{
+      document.documentElement.style.filter = null;
+      document.body.querySelectorAll('img, picture, video')
+      .forEach(el => el.style.filter = null);
+      localStorage.setItem('mode','light')
+    }
+    
+  }
+  $(document).ready(function(){
+    
+    if(localStorage.getItem('mode') === "dark"){
+      document.getElementById('customSwitch1').checked = true
+      comeToTheDarkside()
+    }
+    else{
+      document.getElementById('customSwitch1').checked = false
+    } 
+  });
+
+
+  // comeToTheDarkside()
+</script>
+
 
 <body>
     <!-- navbar -->
@@ -41,6 +75,14 @@
             </li> -->
           </ul>
           <div class="navbar-nav">
+            
+            <div style="display: flex;justify-content: start;align-items: center;" class="custom-control custom-switch">
+              <div>
+                <input onchange="comeToTheDarkside()" type="checkbox" class="custom-control-input" id="customSwitch1">
+                <label class="custom-control-label" for="customSwitch1"></label>
+              </div>
+            </div>
+          
             {% if user.is_authenticated %}
               <a class="nav-item nav-link" href="{% url 'name_profile' user.username %}"><strong>Profile</strong></a>
               <a class="nav-item nav-link" href="{% url 'name_logout_req' %}"><strong>Logout</strong></a>
