@@ -1,20 +1,15 @@
+{% extends 'main/base.html' %}
 {% load crispy_forms_tags %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>hi</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-</head>
-<style>
-  body{
-    background-color: whitesmoke;
-    
-  }
-</style>
-<body>
+
+{% block content %}
+
+  <style>
+    body{
+      background-color: whitesmoke;
+      
+    }
+  </style>
   <div class="col-md-3 mb-0"></div>
 
   <div class="container card col-md-6 mt-4 p-2" style="flex: 1;">
@@ -25,16 +20,15 @@
         <legend class="border-bottom mb-4">Join Today</legend>
         {{ form|crispy }}
       </fieldset>
+        <small class="text-muted">
+          Already Have An Account? <a class="ml-2" href="{% url 'name_login_req' %}">Sign In</a>
+        </small>
       <div class="form-group">
         <button class="btn btn-outline-info" type="submit">Sign up</button>
-    </div>
+      </div>
     </form>
-    <div class="border-top pt-3">
-      <small class="text-muted">
-          Already Have An Account? <a class="ml-2" href="{% url 'name_login_req' %}">Sign In</a>
-      </small>
-  </div>
+
   </div>
   <div class="col-md-3 mb-0"></div>
-</body>
-</html>
+
+  {% endblock %}

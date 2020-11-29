@@ -8,20 +8,19 @@ from django.contrib.auth.decorators import login_required
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        print(request.POST)
         if form.is_valid():
-            form.save()
-            print('####################### # SAVED # ###########################')
+            user = form.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Your account has been created!')
+            messages.success(request, f"New account created: {username}")
+            login(request, user)
+            messages.info(request, f"You are logged in as {username}")
+            return redirect("/")
         else:
-            print('form is not valid')
-            print(form.errors)
-            messages.error(request, 'Error occured')
-            return render(request, 'userauth/signup.html', {'form': form})
-        return redirect('name_login_req')
-    else:
-        form = SignUpForm()
+            for msg in form.error_messages:
+                messages.error(request, f"{msg}: {form.error_messages[msg]}")
+            return render(request = request, template_name = "main/signup.html", context={"form":form})
+        
+    form = SignUpForm()
     return render(request, 'userauth/signup.html', {'form': form})
 
 @login_required
@@ -32,10 +31,6 @@ def editprofile(request):
         firstname = data.get('firstname')
         lastname = data.get('lastname')
         about = data.get('about')
-        print(data)
-        print(firstname)
-        print(lastname)
-        print(about)
         if firstname != '':
             user.first_name = firstname
         if lastname != '':
@@ -47,3 +42,31 @@ def editprofile(request):
         user.save()
         messages.success(request, 'Profile updated successfully')
     return render(request, 'userauth/editprofile.html', {'user':user})
+
+@login_required
+def logout_request(request):
+    logout(request)
+    messages.info(request, "Logged out successfully!" )
+    return redirect("/")
+
+
+
+def login_request(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data = request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are logged in as {username}")
+                return redirect("/")
+            else:
+                messages.error(request, "Invalid username or password")
+                        
+        else:
+            messages.error(request, "Invalid username or password")
+            
+    form  =  AuthenticationForm()
+    return render(request, "userauth/login.html", {"form" : form})
