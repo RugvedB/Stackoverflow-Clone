@@ -5,59 +5,10 @@ from django.db import transaction
 from django.db.models import Count,Q
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from .utils import reputation, performUpDownVote
 from django.core.paginator import Paginator
 # Create your views here.
 
-def reputation(booleanval, rate, ques_obj):
-    if booleanval == False:
-        userrepu = ques_obj.author
-    else:
-        userrepu = ques_obj.answered_by
-
-    userrepu.reputation_score += rate
-    userrepu.save()
-
-def performUpDownVote(user,isQuestion,id,action_type):
-    id = int(id)
-    flag = False
-    if isQuestion == 'True':
-        print('------> isQ')
-        q = Questions.objects.get(pk = id)
-        if q.author == user:
-            return False
-    else:
-        print('------> isNotQ')
-        flag=True
-        q = Answer.objects.get(pk = id)
-        if q.answered_by == user:
-            return False
-
-    existsInUpvote = True if user in q.upvotes.all() else False
-    existsDownUpvote = True if user in q.downvotes.all() else False
-    if existsInUpvote:
-        if action_type == 'downvote':
-            q.upvotes.remove(user)
-            q.downvotes.add(user)
-            reputation(flag,-20, q)
-            q.votes = q.votes - 2
-    elif existsDownUpvote:
-        if action_type == 'upvote':
-            q.downvotes.remove(user)
-            q.upvotes.add(user)
-            reputation(flag,20, q)
-            q.votes = q.votes + 2
-    else:
-        if action_type == 'downvote':
-            q.downvotes.add(user)
-            reputation(flag,-10, q)
-            q.votes = q.votes - 1
-        if action_type == 'upvote':
-            q.upvotes.add(user)
-            reputation(flag,10, q)
-            q.votes = q.votes + 1
-    q.save()
-    return True
   
 def questions(request):
     main_query = Questions.objects
@@ -112,6 +63,11 @@ def questionsingle(request, pk):
     q.views = q.views + 1
     q.save()
 
+    if q.author == user:
+        showaccept = True
+    else:
+        showaccept = False
+
     # Pagination
     all_answers = q.answers.all()
     page = request.GET.get('page', 1)
@@ -122,7 +78,9 @@ def questionsingle(request, pk):
         all_answers = paginator.page(1)
     except EmptyPage:
         all_answers = paginator.page(paginator.num_pages)
-    return render(request, 'main/question-single.html',{'q':q,'all_answers':all_answers })
+
+    
+    return render(request, 'main/question-single.html',{'q':q,'all_answers':all_answers,'showaccept': showaccept })
 
 @login_required
 def askquestion(request):
@@ -153,9 +111,12 @@ def askquestion(request):
 
         if selfanswer != '':     
             a = Answer(ans_content=selfanswer, answered_by=user, question_to_ans = q)
+            a.is_accepted = True
             print(a)
             a.save()
             q.answers.add(a)
+            q.has_accepted_answer = True
+            
             q.save()
             user.ans_given.add(a)
         user.ques_asked.add(q)
@@ -190,3 +151,33 @@ def profile(request, username):
 
     
     return render(request, 'main/profile.html',{'seeuser':seeuser, 'showeditbutton': showeditbutton})
+
+
+@login_required
+def is_accepted(request, pk, pk2):
+    q = Questions.objects.get(pk = pk)
+    a = Answer.objects.get(pk = pk2)
+
+    q.has_accepted_answer = True
+    q.save()
+
+    a.is_accepted = True
+    a.save()
+
+    if q.author == request.user:
+        showaccept = True
+    else:
+        showaccept = False
+
+    # Pagination
+    all_answers = q.answers.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(all_answers, 5)
+    try:
+        all_answers = paginator.page(page)
+    except PageNotAnInteger:
+        all_answers = paginator.page(1)
+    except EmptyPage:
+        all_answers = paginator.page(paginator.num_pages)
+
+    return render(request, 'main/question-single.html',{'q':q,'all_answers':all_answers,'showaccept': showaccept })

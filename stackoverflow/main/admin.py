@@ -1,14 +1,14 @@
 from django.contrib import admin
 from main.models import Questions, Answer, Tags
-from userauth.models import StackoverflowUser
 
 class QuestionsAdmin(admin.ModelAdmin):
     list_filter = ('is_answered',)
 
-admin.site.register(StackoverflowUser)
+class AnswerAdmin(admin.ModelAdmin):
+    list_filter = ('is_accepted',)
 
 admin.site.register(Questions,QuestionsAdmin)
-admin.site.register(Answer)
+admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Tags)
 
 

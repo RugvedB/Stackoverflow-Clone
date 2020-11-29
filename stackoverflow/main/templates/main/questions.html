@@ -68,9 +68,10 @@
                         <div style="max-height: 70px;overflow: hidden;" class="mb-2">
                           <a href="{% url 'name_questionsingle' q.pk %}">{{q.title}}</a>
                         </div>
+                        
                         <div style="max-height: 40px;overflow: hidden;" class="mb-2">
                           {% for t in q.tags.all %}
-                            <button onclick="location.href='{% url 'name_questionByTag' t.tag_word %}'" class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
+                            <button formaction="" class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
                           {% endfor %}
                         </div>
                     </div>

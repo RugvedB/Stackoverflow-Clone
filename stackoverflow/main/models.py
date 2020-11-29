@@ -23,7 +23,7 @@ class Questions(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     votes = models.IntegerField(default=0)
-
+    has_accepted_answer = models.BooleanField(default=False)
 
 class Answer(models.Model):
     ans_content = models.TextField()

@@ -2,7 +2,7 @@
 {% block content %}
 
     <!-- main -->
-    <div class="">
+    <div class="m-2 p-1">
         <div class="row">
 
             <!-- left (slider type) -->
@@ -10,7 +10,7 @@
             
           </div>
           <!-- Main body right side -->
-          <div class="col-md-8 col-sm-12">
+          <div class="col-md-8 col-sm-12 m-2">
             
             <!-- question title -->
             <h2>{{q.title}}</h2>
@@ -28,15 +28,15 @@
                     </div>
                 </div>
                 <!-- right (question) -->
-                <div style="flex:0.9;word-break: break-all;" class="p-2">
+                <div style="flex:0.9;word-break: break-all;overflow-x: scroll;" class="p-2">
                     {{q.ques_content | safe | escape}}
                 <!-- Tags -->
                 <div>
+                    <!-- tags part -->
                     {% for t in q.tags.all %}
-                        <button onclick="location.href='{% url 'name_questionByTag' t.tag_word %}'" class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
+                        <button class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
                     {% endfor %}
                 </div>
-
                 </div>
             </div>
             
@@ -63,34 +63,32 @@
             </div>
 
             <hr>
-            
-            
 
-<!-- Pagination -->
-<nav aria-label="Page navigation example">
-    {% if all_answers.has_other_pages %}
-      <ul class="pagination">
-        {% if all_answers.has_previous %}
-          <li class="page-item"><a class="page-link" href="?page={{ all_answers.previous_page_number }}">&laquo;</a></li>
-        {% else %}
-          <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
-        {% endif %}
-        {% for i in all_answers.paginator.page_range %}
-          {% if all_answers.number == i %}
-            <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
-          {% else %}
-            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-          {% endif %}
-        {% endfor %}
-        {% if all_answers.has_next %}
-          <li class="page-item"><a class="page-link" href="?page={{ all_answers.next_page_number }}">&raquo;</a></li>
-        {% else %}
-          <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
-        {% endif %}
-      </ul>
-    {% endif %}
-    </nav>
-    
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example">
+            {% if all_answers.has_other_pages %}
+            <ul class="pagination">
+                {% if all_answers.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ all_answers.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+                {% endif %}
+                {% for i in all_answers.paginator.page_range %}
+                {% if all_answers.number == i %}
+                    <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if all_answers.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ all_answers.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+                {% endif %}
+            </ul>
+            {% endif %}
+            </nav>
+                
 
             <!-- Answer list -->
             <div style="max-width: 100%;word-break: break-all;">
@@ -104,59 +102,54 @@
                             <a href="?isQuestion=False&id={{a.pk}}&action_type=upvote&page={{all_answers.number}}"><div class="triangle-up"></div></a>
                             <div style="width: 100%;text-align: center;" class="pt-1 pb-1">{{a.votes}}</div>
                             <a href="?isQuestion=False&id={{a.pk}}&action_type=downvote&page={{all_answers.number}}"><div class="triangle-down"></div></a>
-                            
-                            <div style="width: 100%;text-align: center;" class="pt-1 pb-1"><i class="fa fa-check-circle green-color" ></i></div>
+                            {% if a.is_accepted %}
+                            <div style="width: 100%;text-align: center;" class="pt-1 pb-1"><i class="fa fa-check-circle" style="color: green;font-size:36px;" ></i></div>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- right (question) -->
-                    <div style="flex:0.9" class="p-2">
+                    <div style="flex:0.8;overflow-x: scroll;"  class="p-2">
                         {{a.ans_content|safe|escape}}
                     </div>
                 </div>
-                <div style="display: flex;justify-content:flex-end; ">
-                    
-                    <div style="display: flex;flex-direction: column;width: 250px;">
-                        <div>
-                            <small>Asked on {{a.created_at}}</small>
-                        </div>
+                <div>
+                                    
+                    <div style="display: flex;justify-content:flex-end; ">
+                        <div style="display: flex;flex-direction: column;width: 250px;">
+                            <div>
+                                <small>Asked on {{a.created_at}}</small>
+                            </div>
                         <div style="display: flex;flex-direction: row;width: 250px;">
                             <div style="flex: 0.3;" class="p-1">
                                 <img style="width: 100%;height: 100%;" src = "{{a.answered_by.profile_pic.url}}" class="card-img-top" alt="...">
                             </div>
                             <div style="flex: 0.7;" class="p-1">
                                 <p><strong><a href="{% url 'name_profile' a.answered_by.username %}">{{a.answered_by.name}}</a></strong><br>{{a.answered_by.reputation_score}}</p>
-
                             </div>
                         </div>
                     </div>
-
                 </div>
+
+                {% if showaccept and not q.has_accepted_answer %}
+                <div style="display: flex;flex-direction: row;">
+                    <!-- left (upvote) -->
+                    <div style="flex:0.5;display: flex; justify-content: center;" class=" pt-2">
+                        <div>
+                            Do you want to accept this solution?<a href="{% url 'name_is_accepted' q.pk a.pk %}"> Click here!</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
 
             <hr>
 
             {% endfor %}
-
-            
-            
-
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
             <hr>
 
             <!-- Answer Box editor -->
-            <div>
+            <div class="m-2" style="overflow-x: scroll;">
                 <h3><strong>Your Answer</strong></h3>
                 <form method="POST">
                     {% csrf_token %}
@@ -170,10 +163,9 @@
 
           </div>
 
-
-          <!-- <div class="col-md-1 col-sm-0"></div> -->
-          <div class="col-md-2 col-sm-0"></div>
         </div>
+        <div class="col-md-2 col-sm-0"></div>
+        
     </div>
 
 

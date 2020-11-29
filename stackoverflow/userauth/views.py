@@ -13,7 +13,7 @@ def signup(request):
             form.save()
             print('####################### # SAVED # ###########################')
             username = form.cleaned_data.get('username')
-            messages.success(request, f'Your account has been created! You are now able to log in')
+            messages.success(request, f'Your account has been created!')
         else:
             print('form is not valid')
             print(form.errors)

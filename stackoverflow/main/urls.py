@@ -11,8 +11,7 @@ urlpatterns = [
     path('question/<int:pk>', views.questionsingle, name = 'name_questionsingle'),
     path('askquestion/', views.askquestion, name = 'name_askquestion'),
     path('profile/<str:username>', views.profile, name = 'name_profile'),
-    # path('upvote/<str:type>/<int:pk>', views.questions, name = 'name_upvote'),
-    # path('downvote/<str:type>/<int:pk>', views.questions, name = 'name_downvote'),
+    path('question/<int:pk>/<int:pk2>', views.is_accepted, name = 'name_is_accepted'),
     
 ]
 
