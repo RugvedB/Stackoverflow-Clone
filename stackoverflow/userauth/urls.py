@@ -4,6 +4,7 @@ from django.contrib.auth import views as auth_views
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 
 urlpatterns = [
     path('signup/', views.signup, name = 'name_signup'),
@@ -16,6 +17,9 @@ urlpatterns = [
     path('logout/', views.logout_request, name='name_logout_req'),
     
     path('editprofile/', views.editprofile, name = 'name_editprofile'),
+
+    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        views.activate, name='activate'),
 ]
 
 if settings.DEBUG:
