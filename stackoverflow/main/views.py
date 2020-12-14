@@ -27,10 +27,10 @@ def questions(request):
     paginator = Paginator(all_questions, 5)
     try:
         all_questions = paginator.page(page)
-    except PageNotAnInteger:
+    # except EmptyPage:
+    #     all_questions = paginator.page(paginator.num_pages)
+    except Exception as e:
         all_questions = paginator.page(1)
-    except EmptyPage:
-        all_questions = paginator.page(paginator.num_pages)
     
     return render(request, 'main/questions.html',{'all_questions':all_questions,'marked' : marked})
 
