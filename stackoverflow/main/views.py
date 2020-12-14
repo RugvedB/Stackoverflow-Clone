@@ -16,7 +16,7 @@ def questions(request):
         all_questions = main_query.all().order_by('-views')
         marked = 'mostviewed'
     elif request.GET and ('q' in request.GET) and request.GET['q'] == 'unanswered':
-        all_questions = main_query.filter(is_answered = False)
+        all_questions = main_query.filter(is_answered = False).order_by('-created_at')
         marked = 'unanswered'
     else:
         marked = 'latest'
@@ -148,9 +148,10 @@ def questionByTag(request,tag_word):
 def profile(request, username):
     seeuser = StackoverflowUser.objects.get(username=username)
     showeditbutton = True if seeuser == request.user else False
+    userques = Questions.objects.filter(author = seeuser).order_by('-created_at')
+    ansgiven = Answer.objects.filter(answered_by = seeuser).order_by('-created_at')
 
-    
-    return render(request, 'main/profile.html',{'seeuser':seeuser, 'showeditbutton': showeditbutton})
+    return render(request, 'main/profile.html',{'seeuser':seeuser, 'showeditbutton': showeditbutton, 'userques': userques, 'ansgiven': ansgiven})
 
 
 @login_required

@@ -28,30 +28,30 @@
                     </nav>
                 </div>
 
-<!-- Pagination -->
-<nav aria-label="Page navigation example">
-{% if all_questions.has_other_pages %}
-  <ul class="pagination">
-    {% if all_questions.has_previous %}
-      <li class="page-item"><a class="page-link" href="?page={{ all_questions.previous_page_number }}&q={{marked}}">&laquo;</a></li>
-    {% else %}
-      <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
-    {% endif %}
-    {% for i in all_questions.paginator.page_range %}
-      {% if all_questions.number == i %}
-        <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
-      {% else %}
-        <li class="page-item"><a class="page-link" href="?page={{ i }}&q={{marked}}">{{ i }}</a></li>
-      {% endif %}
-    {% endfor %}
-    {% if all_questions.has_next %}
-      <li class="page-item"><a class="page-link" href="?page={{ all_questions.next_page_number }}&q={{marked}}">&raquo;</a></li>
-    {% else %}
-      <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
-    {% endif %}
-  </ul>
-{% endif %}
-</nav>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation example">
+                {% if all_questions.has_other_pages %}
+                  <ul class="pagination">
+                    {% if all_questions.has_previous %}
+                      <li class="page-item"><a class="page-link" href="?page={{ all_questions.previous_page_number }}&q={{marked}}">&laquo;</a></li>
+                    {% else %}
+                      <li class="disabled page-item"><span class="page-link">&laquo;</span></li>
+                    {% endif %}
+                    {% for i in all_questions.paginator.page_range %}
+                      {% if all_questions.number == i %}
+                        <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span></li>
+                      {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}&q={{marked}}">{{ i }}</a></li>
+                      {% endif %}
+                    {% endfor %}
+                    {% if all_questions.has_next %}
+                      <li class="page-item"><a class="page-link" href="?page={{ all_questions.next_page_number }}&q={{marked}}">&raquo;</a></li>
+                    {% else %}
+                      <li class="disabled page-item"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                  </ul>
+                {% endif %}
+                </nav>
                 
                 {% for q in all_questions %}
                 <div class="row mt-2">
@@ -71,9 +71,11 @@
                         
                         <div style="max-height: 40px;overflow: hidden;" class="mb-2">
                           {% for t in q.tags.all %}
-                            <button formaction="" class="btn btn-primary btn-sm" type="submit">{{t.tag_word}}</button>
+                          <button class="btn btn-primary btn-sm" onclick="location.href = '/tag/{{t.tag_word}}'">{{t.tag_word}}</button>
                           {% endfor %}
                         </div>
+                        
+    
                     </div>
                   
                 </div>
@@ -84,14 +86,15 @@
                 
                 <hr>
                 {% endfor %}
-                
-                
-            
-            
             </div>
             <div class="col-12 col-md-2"></div>
         </div>
     </div>
-
+    <!-- <script>
+      function myFunction(clicked_object) {
+        let url = clicked_object.getAttribute('data')
+        window.location.href = url
+      }
+    </script> -->
 {% endblock %}
 
