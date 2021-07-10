@@ -18,7 +18,7 @@ The aim of the project is to implement all the basic and necesssary functionalit
    <br><br>
    <b>For developers, by developers</b>
    <br><br>
-Stack Overflow is an open community for anyone that codes. We help you get answers to your toughest coding questions, share knowledge with your coworkers in private, and find your next dream job.
+Stack Overflow is an open community for anyone that codes. They help you get answers to your toughest coding questions, share knowledge with your coworkers in private, and find your next dream job.
 </p>
 
 -----------------------------------
